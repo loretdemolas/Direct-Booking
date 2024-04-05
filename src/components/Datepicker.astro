@@ -1,0 +1,46 @@
+---
+import "inclusive-dates/dist/themes/light.css";
+---
+
+<inclusive-dates
+        id="datepicker"
+        range={true}
+        label="Pick the dates of your stay"
+></inclusive-dates>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/inclusive-dates/dist/esm/inclusive-dates.js"></script>
+
+<script type="module">
+    // Function to format date range or single date
+    function formatDateRangeOrDate(startDateStr, endDateStr) {
+        const startDate = new Date(startDateStr);
+        const endDate = new Date(endDateStr);
+        const formattedDates = [];
+
+        if (isNaN(startDate.getTime())) {
+            // If startDate is not a valid date, treat it as a single date
+            return [endDateStr];
+        } else if (isNaN(endDate.getTime())) {
+            // If endDate is not a valid date, treat it as a single date
+            return [startDateStr];
+        } else {
+            // If both startDate and endDate are valid dates, format the date range
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                formattedDates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return formattedDates;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const datepicker = document.getElementById('datepicker');
+        datepicker.addEventListener('selectDate', function(event) {
+            const dateRangeOrDate = event.detail;
+            const formattedDateRangeOrDate = formatDateRangeOrDate(dateRangeOrDate[0], dateRangeOrDate[1]);
+            console.log(formattedDateRangeOrDate);
+            // You can use the formatted date range or date as needed
+        });
+    });
+</script>
