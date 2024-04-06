@@ -1,0 +1,99 @@
+---
+import menuIcon from '../assets/MenuIcon.svg'
+
+---
+<button type="button" class="menu-toggle" data-toggle="off-canvas-menu" aria-expanded="false" aria-controls="off-canvas-menu">
+    <img src={menuIcon.src} width={24} height={24} alt="Menu button">
+</button>
+
+
+<div id="off-canvas-menu" class="off-canvas-menu">
+    <!-- Off-canvas menu content goes here -->
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/Reservation">Reservation</a></li>
+        <li><a href="/LocalLinks">Local Links</a></li>
+        <li><a href="/About">About</a></li>
+    </ul>
+</div>
+
+<style>
+    .menu-toggle {
+        position: fixed;
+        top: 10px; /* Adjust top position as needed */
+        right: 10px; /* Adjust right position as needed */
+        z-index: 1001; /* Ensure the button appears above the menu */
+        transition: right 0.3s ease; /* Add transition for smooth sliding */
+    }
+
+    .off-canvas-menu {
+        position: fixed;
+        top: 0;
+        right: -200px; /* Start off-canvas menu off-screen */
+        height: 100%;
+        width: 200px; /* Adjust width as needed */
+        background-color: #333; /* Adjust background color as needed */
+        padding-top: 50px; /* Adjust top padding to accommodate header if any */
+        z-index: 1000; /* Ensure menu appears above other content */
+        transition: right 0.3s ease; /* Add transition for smooth sliding */
+    }
+
+    .off-canvas-menu.active {
+        right: 0; /* Slide menu into view */
+    }
+
+    .off-canvas-menu ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .off-canvas-menu ul li {
+        padding: 10px;
+    }
+
+    .off-canvas-menu ul li a {
+        color: white;
+        text-decoration: none;
+    }
+
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const offCanvasMenu = document.getElementById('off-canvas-menu');
+
+        menuToggle.addEventListener('click', function () {
+            // Toggle the active class on the off-canvas menu
+            offCanvasMenu.classList.toggle('active');
+
+            // Toggle the aria-expanded attribute on the menu toggle button
+            const ariaExpanded = offCanvasMenu.classList.contains('active') ? 'true' : 'false';
+            menuToggle.setAttribute('aria-expanded', ariaExpanded);
+
+            // Adjust the right position of the menu button and the positioning of the website content when the menu is opened
+            if (offCanvasMenu.classList.contains('active')) {
+                const offCanvasMenuWidth = offCanvasMenu.offsetWidth;
+                menuToggle.style.right = `${offCanvasMenuWidth + 10}px`;
+                document.body.style.transition = 'margin-right 0.3s ease'; // Add transition for smooth sliding
+                document.body.style.marginRight = `${offCanvasMenuWidth}px`;
+            } else {
+                menuToggle.style.right = '10px';
+                document.body.style.marginRight = '0';
+            }
+        });
+
+        // Close the off-canvas menu when clicking outside of it
+        document.addEventListener('click', function (event) {
+            if (!offCanvasMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                offCanvasMenu.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+
+                // Reset the right position of the menu button and the positioning of the website content
+                menuToggle.style.right = '10px';
+                document.body.style.marginRight = '0';
+            }
+        });
+    });
+</script>
